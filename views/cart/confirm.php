@@ -52,17 +52,30 @@
 
 <body>
     <?php include_once __DIR__ . '/../partials/navbar.php'; ?>
+    <?php
+    if (!isset($notRegistered) || !is_array($notRegistered)) {
+        $notRegistered = [];
+    }
+    ?>
+
     <div class="container">
         <h2>Xác Nhận Đăng Ký Học Phần</h2>
         <!-- Hiển thị thông tin sinh viên -->
         <?php include_once __DIR__ . '/../partials/student_info.php'; ?>
 
+        <!-- Nếu có học phần đã đăng ký trước đó, hiển thị cảnh báo -->
+        <?php if (!empty($alreadyRegistered)): ?>
+            <div class="alert alert-warning">
+                Các học phần sau đã được đăng ký trước đó: <strong><?php echo implode(', ', array_keys($alreadyRegistered)); ?></strong>
+            </div>
+        <?php endif; ?>
+
         <div class="summary-card">
             <h4>Tóm tắt đăng ký</h4>
-            <p><strong>Tổng số môn:</strong> <?php echo $totalCourses; ?></p>
-            <p><strong>Tổng số tín chỉ:</strong> <?php echo $totalCredits; ?></p>
+            <p><strong>Tổng số môn cần đăng ký:</strong> <?php echo $totalCourses; ?></p>
+            <p><strong>Tổng số tín chỉ cần đăng ký:</strong> <?php echo $totalCredits; ?></p>
             <hr>
-            <h5>Danh sách học phần:</h5>
+            <h5>Danh sách học phần cần đăng ký:</h5>
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
@@ -73,7 +86,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($courses as $MaHP => $course): ?>
+                    <?php foreach ($notRegistered as $MaHP => $course): ?>
                         <tr>
                             <td><?php echo $MaHP; ?></td>
                             <td><?php echo $course['TenHP']; ?></td>
@@ -85,9 +98,13 @@
             </table>
         </div>
         <div class="text-center">
-            <form method="post" action="index.php?controller=cart&action=confirm">
-                <button type="submit" name="confirm_registration" class="btn btn-success btn-custom">Xác Nhận Đăng Ký</button>
-            </form>
+            <?php if (!empty($notRegistered)): ?>
+                <form method="post" action="index.php?controller=cart&action=confirm">
+                    <button type="submit" name="confirm_registration" class="btn btn-success btn-custom">Xác Nhận Đăng Ký</button>
+                </form>
+            <?php else: ?>
+                <div class="alert alert-info">Tất cả các học phần trong giỏ đã được đăng ký. Không có học phần nào cần đăng ký thêm.</div>
+            <?php endif; ?>
             <a href="index.php?controller=cart&action=index" class="btn btn-secondary btn-custom mt-3">Quay lại giỏ hàng</a>
         </div>
     </div>
