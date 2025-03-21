@@ -15,8 +15,10 @@
             margin-top: 50px;
         }
 
-        .card-header h5 {
-            margin: 0;
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
         }
 
         .table thead th {
@@ -34,6 +36,19 @@
 
         .action-btn {
             margin-bottom: 10px;
+        }
+
+        .summary-box {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin-top: 30px;
+        }
+
+        .summary-box h4 {
+            color: #007bff;
+            margin-bottom: 20px;
         }
     </style>
 </head>
@@ -97,21 +112,31 @@
                             onclick="return confirm('Bạn có chắc chắn muốn xóa toàn bộ học phần trong giỏ?')">
                             Xóa Tất Cả
                         </a>
-                        <form method="post" action="index.php?controller=cart&action=index">
-                            <button type="submit" name="save_registration" class="btn btn-success btn-custom">
-                                Lưu Đăng Ký
-                            </button>
-                        </form>
                     </div>
                 </div>
+            </div>
+            <!-- Tính toán tổng số môn và tổng số tín chỉ -->
+            <?php
+            $totalCourses = count($_SESSION['cart']);
+            $totalCredits = 0;
+            foreach ($_SESSION['cart'] as $course) {
+                $totalCredits += $course['SoTinChi'] * $course['quantity'];
+            }
+            ?>
+            <div class="summary-box">
+                <h4>Tóm tắt đăng ký</h4>
+                <p><strong>Tổng số môn:</strong> <?php echo $totalCourses; ?></p>
+                <p><strong>Tổng số tín chỉ:</strong> <?php echo $totalCredits; ?></p>
+            </div>
+            <div class="text-center">
+                <!-- Nút chuyển đến trang xác nhận -->
+                <a href="index.php?controller=cart&action=confirm" class="btn btn-success btn-custom">Tiếp tục</a>
             </div>
         <?php else: ?>
             <div class="alert alert-info">Chưa có học phần nào trong giỏ hàng!</div>
         <?php endif; ?>
-        <div class="text-center">
-            <a href="index.php?controller=hocphan&action=index" class="btn btn-primary btn-custom">
-                Tiếp tục Đăng Ký Học Phần
-            </a>
+        <div class="text-center mt-3">
+            <a href="index.php?controller=hocphan&action=index" class="btn btn-primary btn-custom">Tiếp tục Đăng Ký Học Phần</a>
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

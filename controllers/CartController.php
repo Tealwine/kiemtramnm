@@ -133,4 +133,44 @@ class CartController
         }
         require_once __DIR__ . '/../views/cart/registered.php';
     }
+    public function confirm()
+    {
+        if (!isset($_SESSION['user'])) {
+            $_SESSION['error'] = "Bạn phải đăng nhập!";
+            header("Location: index.php?controller=auth&action=login");
+            exit();
+        }
+        // Nếu người dùng nhấn nút xác nhận đăng ký
+        if (isset($_POST['confirm_registration'])) {
+            // Thực hiện quá trình lưu đăng ký như cũ (với kiểm tra trùng lặp, cập nhật số lượng,...)
+            // Sau đó, chuyển hướng và hiển thị thông báo thành công
+            // (Bạn có thể tái sử dụng logic từ action index để lưu đăng ký)
+            // Ví dụ:
+            $MaSV = $_SESSION['user'];
+            $NgayDK = date('Y-m-d');
+            $MaDK = $this->dkModel->create($MaSV, $NgayDK);
+            if ($MaDK) {
+                foreach ($_SESSION['cart'] as $MaHP => $course) {
+                    if (!$this->dkModel->isCourseRegistered($MaSV, $MaHP)) {
+                        $this->ctdkModel->create($MaDK, $MaHP);
+                        $this->hpModel->updateSoLuongSV($MaHP, $course['quantity']);
+                    }
+                }
+                unset($_SESSION['cart']);
+                $_SESSION['success'] = "Đăng ký học phần thành công!";
+            } else {
+                $_SESSION['error'] = "Lỗi trong quá trình đăng ký học phần!";
+            }
+            header("Location: index.php?controller=cart&action=index");
+            exit();
+        }
+        // Tính toán tổng số môn và tổng số tín chỉ từ giỏ hàng
+        $totalCourses = count($_SESSION['cart']);
+        $totalCredits = 0;
+        foreach ($_SESSION['cart'] as $course) {
+            $totalCredits += $course['SoTinChi'] * $course['quantity'];
+        }
+        $courses = $_SESSION['cart'];
+        require_once __DIR__ . '/../views/cart/confirm.php';
+    }
 }
