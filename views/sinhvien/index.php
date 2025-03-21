@@ -63,18 +63,18 @@
                 unset($_SESSION['error']); ?>
             </div>
         <?php endif; ?>
-        <div class="mb-3 text-center">
-            <a href="index.php?controller=sinhvien&action=create" class="btn btn-primary btn-custom">Thêm Sinh Viên</a>
-        </div>
+
         <div class="table-responsive">
             <table class="table table-bordered table-hover align-middle">
                 <thead>
                     <tr>
                         <th>Mã Sinh Viên</th>
-                        <th>Hình Ảnh</th>
+                        <th>Mã Ngành</th>
                         <th>Họ Tên</th>
+
                         <th>Giới Tính</th>
                         <th>Ngày Sinh</th>
+                        <th>Hình Ảnh</th>
                         <th>Hành động</th>
                     </tr>
                 </thead>
@@ -82,6 +82,10 @@
                     <?php foreach ($students as $sv): ?>
                         <tr>
                             <td><?php echo $sv['MaSV']; ?></td>
+                            <td><?php echo $sv['MaNganh']; ?></td>
+                            <td><?php echo $sv['HoTen']; ?></td>
+                            <td><?php echo $sv['GioiTinh']; ?></td>
+                            <td><?php echo $sv['NgaySinh']; ?></td>
                             <td class="text-center">
                                 <?php if (!empty($sv['Hinh'])): ?>
                                     <img src="<?php echo $sv['Hinh']; ?>" alt="Hình ảnh" class="student-img">
@@ -89,9 +93,8 @@
                                     <span class="text-muted">Không có hình ảnh</span>
                                 <?php endif; ?>
                             </td>
-                            <td><?php echo $sv['HoTen']; ?></td>
-                            <td><?php echo $sv['GioiTinh']; ?></td>
-                            <td><?php echo $sv['NgaySinh']; ?></td>
+
+
                             <td class="action-btns">
                                 <a href="index.php?controller=sinhvien&action=detail&MaSV=<?php echo $sv['MaSV']; ?>" class="btn btn-info btn-sm btn-custom">Chi tiết</a>
                                 <a href="index.php?controller=sinhvien&action=edit&MaSV=<?php echo $sv['MaSV']; ?>" class="btn btn-warning btn-sm btn-custom">Sửa</a>
@@ -104,7 +107,10 @@
         </div>
         <div class="text-center mt-4">
             <a href="index.php?controller=cart&action=index" class="btn btn-success btn-custom">Đăng ký Học Phần</a>
+
+            <a href="index.php?controller=sinhvien&action=create" class="btn btn-primary btn-custom">Thêm Sinh Viên</a>
         </div>
+
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
